@@ -9,10 +9,7 @@
 package coursework_sem2_t1;
 
 /* Imports */
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 
 /*
@@ -34,7 +31,8 @@ public class Book {
         /* Constructors */
         public Address(String street, int house, int flat) {
             if (street == null || street.isEmpty() || house <= 0 || flat <= 0) {
-                throw new IllegalArgumentException("Incorrect address format with params: " + street + ", " + house + ", " + flat);
+                throw new IllegalArgumentException(String.format("Incorrect address format with params: %s, %d, %d",
+                        street, house, flat));
             }
             this.street = street;
             this.house = house;
@@ -76,7 +74,7 @@ public class Book {
 
         @Override
         public String toString() {
-            return this.street + ", д. " + this.house + ", кв. " + this.flat;
+            return String.format("%s, д. %d, кв. %d", this.street, this.house, this.flat);
         }
 
         @Override
@@ -85,18 +83,16 @@ public class Book {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj instanceof Address) {
-                Address other = (Address) obj;
-                return this.street.equals(other.street) &&
-                        this.house == other.house &&
-                        this.flat == other.flat;
-            }
-            return false;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Address other = (Address) o;
+            return Objects.equals(street, other.street) &&
+                    Objects.equals(house, other.house) &&
+                    Objects.equals(flat, other.flat);
         }
     }
+
 
     /* Fields */
     private final Map<String, Address> book; // Basic container
@@ -110,7 +106,8 @@ public class Book {
     }
 
     /* Constructor from Map */
-    public Book(/* @NotNull */Map<String, Address> b) {
+    public Book(Map<String, Address> b) {
+        if (b == null) throw new NullPointerException("Null map");
         this.book = new HashMap<>();
         this.book.putAll(b);
     }
@@ -120,10 +117,11 @@ public class Book {
 
     /* Check if book has specified person
      * Params: (String) person - key to be checked
-     * Returns: true if this book doesn't have a specified person
+     * Returns: true if this book has a specified person
      */
-    private boolean hasNo(String person) {
-        return this.book.isEmpty() || !this.book.containsKey(person);
+    private boolean contains(String person) {
+        if (person == null) throw new NullPointerException("Null person");
+        return this.book.containsKey(person);
     }
 
     /* Add person to book method
@@ -135,7 +133,7 @@ public class Book {
      * Returns: true if the person was added, false otherwise
      */
     public boolean add(String person, Address ad) {
-        if (this.book.containsKey(person))
+        if (this.contains(person))
             return false;
         this.book.put(person, ad);
         return true;
@@ -146,7 +144,7 @@ public class Book {
      * Returns: true if the person was deleted, false otherwise
      */
     public boolean delete(String person) {
-        if (this.hasNo(person))
+        if (!this.contains(person))
             return false;
         this.book.remove(person);
         return true;
@@ -161,7 +159,7 @@ public class Book {
      * Returns: true if the person's address was replaced, false otherwise
      */
     public boolean replace(String person, Address ad) {
-        if (this.hasNo(person))
+        if (!this.contains(person))
             return false;
         this.book.replace(person, ad);
         return true;
@@ -169,9 +167,10 @@ public class Book {
 
     /* Get address by person method
      * Params: (String) person - key
-     * Returns: (Address) of the person or null if this book contains no mapping for the key
+     * Returns: (Address) The address to which the specified key is mapped, or null if this book contains no mapping for the key
      */
     public Address getAddress(String person) {
+        if (person == null) throw new NullPointerException("Null person");
         return this.book.get(person);
     }
 
@@ -182,10 +181,9 @@ public class Book {
     public Set<String> getPeople(String street) {
         Set<String> res = new HashSet<>();
 
-        for (String p : this.book.keySet()) {
-            Address ad = getAddress(p);
-            if (street.equals(ad.getStreet()))
-                res.add(p);
+        for (Map.Entry<String, Address> entry : this.book.entrySet()) {
+            if (street.equals(entry.getValue().getStreet()))
+                res.add(entry.getKey());
         }
 
         return res;
@@ -200,10 +198,11 @@ public class Book {
     public Set<String> getPeople(String street, int house) {
         Set<String> res = new HashSet<>();
 
-        for (String p : this.book.keySet()) {
-            Address ad = getAddress(p);
-            if (street.equals(ad.getStreet()) && house == ad.getHouse())
-                res.add(p);
+        for (Map.Entry<String, Address> entry : this.book.entrySet()) {
+            if (street.equals(entry.getValue().getStreet()) &&
+                    house == entry.getValue().getHouse()
+            )
+                res.add(entry.getKey());
         }
 
         return res;
@@ -231,13 +230,10 @@ public class Book {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj instanceof Book) {
-            Book other = (Book) obj;
-            return this.book.equals(other.book);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book that = (Book) o;
+        return Objects.equals(this.book, that.book);
     }
 }

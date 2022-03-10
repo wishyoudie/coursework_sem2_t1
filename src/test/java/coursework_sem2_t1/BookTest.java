@@ -24,168 +24,197 @@ import java.util.HashSet;
 class BookTest {
     @Test
     public void addressStreet() {
-        String st = "a";
-        Book.Address ad = new Book.Address("a", 1, 1);
-        assertEquals(st, ad.getStreet());
+        String expectedStreet = "a";
+        Book.Address address = new Book.Address("a", 1, 1);
+        assertEquals(expectedStreet, address.getStreet());
     }
 
     @Test
-    public void badAddressStreet() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Book.Address bad = new Book.Address(null, 1, 1);
-        });
+    public void nullAddressStreet() {
+        assertThrows(IllegalArgumentException.class, () -> new Book.Address(null, 1, 1));
     }
 
     @Test
     public void addressHouse() {
-        int h = 1;
-        Book.Address ad = new Book.Address("a", 1, 1);
-        assertEquals(h, ad.getHouse());
+        int expectedHouse = 1;
+        Book.Address address = new Book.Address("a", 1, 1);
+        assertEquals(expectedHouse, address.getHouse());
     }
 
     @Test
-    public void badAddressHouse() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Book.Address bad = new Book.Address("null", -1, 1);
-        });
+    public void nonPositiveAddressHouse() {
+        assertThrows(IllegalArgumentException.class, () -> new Book.Address("null", -1, 1));
     }
 
     @Test
     public void addressFlat() {
-        int fl = 2;
-        Book.Address ad = new Book.Address("a", 1, 2);
-        assertEquals(fl, ad.getFlat());
+        int expectedFlat = 2;
+        Book.Address address = new Book.Address("a", 1, 2);
+        assertEquals(expectedFlat, address.getFlat());
     }
 
     @Test
-    public void badAddressFlat() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Book.Address bad = new Book.Address("null", 1, -1);
-        });
+    public void nonPositiveAddressFlat() {
+        assertThrows(IllegalArgumentException.class, () -> new Book.Address("null", 1, -1));
     }
 
 
     @Test
     void add() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        assertEquals(0, a.size());
-        assertTrue(a.add("A", ad));
-        assertEquals(1, a.size());
-        assertFalse(a.add("A", ad));
-        Book.Address adt = new Book.Address("a", 1 ,2);
-        assertFalse(a.add("A", adt));
+        Book book = new Book();
+        Book.Address address = new Book.Address("a", 1, 1);
+
+        assertEquals(0, book.size()); // Check that initial size is 0
+        assertTrue(book.add("A", address)); // Returns true if added successfully
+        assertEquals(1, book.size()); // Now size is 1
+        assertFalse(book.add("A", address)); // Returns false if already contains the same entry
+
+        Book.Address secondAddress = new Book.Address("a", 1 ,2);
+        assertFalse(book.add("A", secondAddress)); // Returns false if already contains the same key
     }
 
     @Test
-    void secondConstructor() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        a.add("A", ad);
-        Map<String, Book.Address> bMap = new HashMap<>();
-        bMap.put("A", ad);
-        Book b = new Book(bMap);
-        assertEquals(a, b);
+    void constructorFromMap() {
+        Book expectedBook = new Book();
+        Book.Address address = new Book.Address("a", 1, 1);
+        expectedBook.add("A", address);
+
+        Map<String, Book.Address> testMap = new HashMap<>();
+        testMap.put("A", address);
+        Book testBook = new Book(testMap); // 'testBook' is made from 'testMap'
+
+        assertEquals(expectedBook, testBook); // True if constructor from map works
+        assertThrows(NullPointerException.class, () -> new Book(null)); // Check map nullability
     }
 
     @Test
     void delete() {
-        Book a = new Book();
-        assertFalse(a.delete("B"));
-        Book.Address ad = new Book.Address("a", 1, 1);
-        a.add("A", ad);
-        assertTrue(a.delete("A"));
-        assertEquals(0, a.size());
-        assertFalse(a.delete("B"));
+        Book book = new Book();
+        assertFalse(book.delete("B")); // Returns false if it doesn't contain the specified key
+
+        Book.Address address = new Book.Address("a", 1, 1);
+        book.add("A", address);
+
+        assertTrue(book.delete("A")); // Returns true if deleted successfully
+        assertEquals(0, book.size()); // If really did delete, size should be 0
+        assertFalse(book.delete("A")); // Should return false, "A" already deleted
     }
 
     @Test
     void replace() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        assertFalse(a.replace("A", ad));
-        Book.Address ab = new Book.Address("a", 1, 2);
-        a.add("A", ad);
-        assertTrue(a.replace("A", ab));
-        assertEquals(a.getAddress("A"), ab);
-        assertFalse(a.replace("B", ad));
+        Book book = new Book();
+        Book.Address address = new Book.Address("a", 1, 1);
+
+        assertFalse(book.replace("A", address)); // Returns false if it doesn't contain the specified key
+
+        Book.Address secondAddress = new Book.Address("a", 1, 2);
+        book.add("A", address);
+
+        assertTrue(book.replace("A", secondAddress)); // Returns true if replaced successfully
+        assertEquals(book.getAddress("A"), secondAddress); // Check address change
+        assertThrows(NullPointerException.class, () -> book.replace(null, address)); // Check person nullability
     }
 
     @Test
     void getAddress() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        a.add("A", ad);
-        assertEquals(ad, a.getAddress("A"));
-        assertNull(a.getAddress("B"));
-        a.delete("A");
-        assertNull(a.getAddress("A"));
+        Book book = new Book();
+        Book.Address address = new Book.Address("a", 1, 1);
+        book.add("A", address);
+
+        assertEquals(address, book.getAddress("A")); // Should be equal
+        assertNull(book.getAddress("B")); // Returns null if it doesn't contain the specified key
+
+        book.delete("A");
+        assertNull(book.getAddress("A")); // Doesn't contain "A" anymore
+        assertThrows(NullPointerException.class, () -> book.getAddress(null)); // Check person nullability
     }
 
     @Test
-    void getPeople() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        a.add("A", ad);
-        a.add("B", ad);
-        a.add("C", ad);
-        Set<String> GoodGuys = new HashSet<>(); // goodGuys!!
-        GoodGuys.add("A");
-        GoodGuys.add("B");
-        GoodGuys.add("C");
-        assertEquals(GoodGuys, a.getPeople("a"));
-        a.delete("C");
-        GoodGuys.remove("C");
-        assertEquals(GoodGuys, a.getPeople("a"));
-        GoodGuys.add("D");
-        assertNotEquals(GoodGuys, a.getPeople("a"));
-        assertEquals(new HashSet<String>(), a.getPeople("b"));
+    void getPeopleOnlyByStreet() {
+        Book book = new Book();
+        Book.Address address = new Book.Address("a", 1, 1);
+        book.add("A", address);
+        book.add("B", address);
+        book.add("C", address);
+
+        Set<String> testSet = new HashSet<>();
+        testSet.add("A");
+        testSet.add("B");
+        testSet.add("C");
+
+        assertEquals(testSet, book.getPeople("a")); // Should be equal
+
+        book.delete("C");
+        testSet.remove("C");
+
+        assertEquals(testSet, book.getPeople("a")); // Should still be equal
+
+        testSet.add("D");
+        assertNotEquals(testSet, book.getPeople("a")); // Now it shouldn't
+        assertEquals(new HashSet<String>(), book.getPeople("b")); // Should return empty set: no people on street "b"
     }
 
     @Test
-    void getPeopleStreetAndHouse() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        a.add("A", ad);
-        Book.Address ab = new Book.Address("a", 1, 2);
-        a.add("B", ab);
-        Book.Address al = new Book.Address("a", 2, 1);
-        a.add("C", al);
-        Set<String> GoodGuys = new HashSet<>();
-        GoodGuys.add("A");
-        GoodGuys.add("B");
-        assertEquals(GoodGuys, a.getPeople("a", 1));
-        Set<String> BadGuys = new HashSet<>();
-        BadGuys.add("C");
-        assertEquals(BadGuys, a.getPeople("a", 2));
-        GoodGuys.addAll(BadGuys);
-        assertEquals(GoodGuys, a.getPeople("a"));
-        assertEquals(new HashSet<>(), a.getPeople("a", 3));
+    void getPeopleByStreetAndHouse() {
+        Book book = new Book();
+
+        Book.Address address = new Book.Address("a", 1, 1);
+        book.add("A", address);
+
+        Book.Address addressWithDifferentFlat = new Book.Address("a", 1, 2);
+        book.add("B", addressWithDifferentFlat);
+
+        Book.Address addressWithDifferentHouse = new Book.Address("a", 2, 1);
+        book.add("C", addressWithDifferentHouse);
+
+        Set<String> sameHouseSet = new HashSet<>();
+        sameHouseSet.add("A");
+        sameHouseSet.add("B");
+        assertEquals(sameHouseSet, book.getPeople("a", 1)); // Should be equal (same house)
+
+        Set<String> differentHouseSet = new HashSet<>();
+        differentHouseSet.add("C");
+
+        assertEquals(differentHouseSet, book.getPeople("a", 2)); // Only "C" in house #2
+
+        sameHouseSet.addAll(differentHouseSet);
+        assertEquals(sameHouseSet, book.getPeople("a")); // All on same street
+
+        assertEquals(new HashSet<>(), book.getPeople("a", 3)); // None in this house
     }
 
     @Test
     void size() {
-        Book a = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        assertEquals(0, a.size());
-        a.add("a", ad);
-        assertEquals(1, a.size());
-        a.add("a", ad);
-        assertEquals(1, a.size());
-        a.delete("a");
-        assertEquals(0, a.size());
+        Book book = new Book();
+        Book.Address address = new Book.Address("a", 1, 1);
+
+        assertEquals(0, book.size()); // Initial size
+
+        book.add("a", address);
+        assertEquals(1, book.size()); // Now 1
+
+        book.add("a", address);
+        assertEquals(1, book.size()); // Still 1: already contains "a"
+
+        book.add("b", address);
+        assertEquals(2, book.size()); // 2 people now
     }
 
     @Test
     void testEquals() {
-        Book a = new Book();
-        Book b = new Book();
-        Book.Address ad = new Book.Address("a", 1, 1);
-        Book.Address ab = new Book.Address("a", 1, 2);
-        a.add("a", ad);
-        b.add("a", ad);
-        assertEquals(a, b);
-        b.add("b", ab);
-        assertNotEquals(a, b);
+        Book firstBook = new Book();
+        Book secondBook = new Book();
+        Book.Address firstAddress = new Book.Address("a", 1, 1);
+        Book.Address secondAddress = new Book.Address("a", 1, 2);
+
+        firstBook.add("a", firstAddress);
+        secondBook.add("a", firstAddress);
+
+        assertEquals(firstBook, secondBook); // Should be equal
+
+        secondBook.add("b", secondAddress);
+        assertNotEquals(firstBook, secondBook); // Now secondBook has different set of entries
+
+        assertNotEquals(firstBook, null); // Check nullability
     }
 }
