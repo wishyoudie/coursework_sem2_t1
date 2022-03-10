@@ -33,7 +33,7 @@ public class Book {
 
         /* Constructors */
         public Address(String street, int house, int flat) {
-            if (street == null || house <= 0 || flat <= 0) {
+            if (street == null || street.isEmpty() || house <= 0 || flat <= 0) {
                 throw new IllegalArgumentException("Incorrect address format with params: " + street + ", " + house + ", " + flat);
             }
             this.street = street;
@@ -110,7 +110,7 @@ public class Book {
     }
 
     /* Constructor from Map */
-    public Book(Map<String, Address> b) {
+    public Book(/* @NotNull */Map<String, Address> b) {
         this.book = new HashMap<>();
         this.book.putAll(b);
     }

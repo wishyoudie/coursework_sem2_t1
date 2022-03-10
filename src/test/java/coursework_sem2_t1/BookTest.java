@@ -129,7 +129,7 @@ class BookTest {
         a.add("A", ad);
         a.add("B", ad);
         a.add("C", ad);
-        Set<String> GoodGuys = new HashSet<>();
+        Set<String> GoodGuys = new HashSet<>(); // goodGuys!!
         GoodGuys.add("A");
         GoodGuys.add("B");
         GoodGuys.add("C");
@@ -143,7 +143,7 @@ class BookTest {
     }
 
     @Test
-    void getPeopleSecond() {
+    void getPeopleStreetAndHouse() {
         Book a = new Book();
         Book.Address ad = new Book.Address("a", 1, 1);
         a.add("A", ad);
