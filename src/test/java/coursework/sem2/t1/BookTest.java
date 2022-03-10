@@ -1,12 +1,12 @@
 /* FILE NAME: BookTest.java
  * PROGRAMMER: Ilyin Vladimir, group 3530901/10005, GitHub: @wishyoudie
- * DATE: 02/23/2022
+ * DATE: 03/11/2022
  * PURPOSE: Implementation of Address book class.
  *          Test module.
  */
 
 /* Package */
-package coursework_sem2_t1;
+package coursework.sem2.t1;
 
 /* Imports */
 import org.junit.jupiter.api.Test;
