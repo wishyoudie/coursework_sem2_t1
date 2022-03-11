@@ -10,11 +10,10 @@ package coursework.sem2.t1;
 
 import java.util.*;
 
-
 /**
  * Address book implementation class
  */
-public class Book {
+public class Book implements AddressBook {
 
     /**
      * Address implementation class
