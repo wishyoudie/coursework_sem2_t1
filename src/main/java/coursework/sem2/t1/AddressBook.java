@@ -9,6 +9,9 @@ package coursework.sem2.t1;
 
 import java.util.Set;
 
+/**
+ * Address book interface
+ */
 public interface AddressBook {
     boolean add(String person, Book.Address ad);
     boolean delete(String person);
