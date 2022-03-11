@@ -20,64 +20,28 @@ import java.util.HashSet;
  * Address book test class
  */
 class BookTest {
-    @Test
-    public void addressStreet() {
-        String expectedStreet = "a";
-        Book.Address address = new Book.Address("a", 1, 1);
-        assertEquals(expectedStreet, address.getStreet());
-    }
-
-    @Test
-    public void nullAddressStreet() {
-        assertThrows(IllegalArgumentException.class, () -> new Book.Address(null, 1, 1));
-    }
-
-    @Test
-    public void addressHouse() {
-        int expectedHouse = 1;
-        Book.Address address = new Book.Address("a", 1, 1);
-        assertEquals(expectedHouse, address.getHouse());
-    }
-
-    @Test
-    public void nonPositiveAddressHouse() {
-        assertThrows(IllegalArgumentException.class, () -> new Book.Address("null", -1, 1));
-    }
-
-    @Test
-    public void addressFlat() {
-        int expectedFlat = 2;
-        Book.Address address = new Book.Address("a", 1, 2);
-        assertEquals(expectedFlat, address.getFlat());
-    }
-
-    @Test
-    public void nonPositiveAddressFlat() {
-        assertThrows(IllegalArgumentException.class, () -> new Book.Address("null", 1, -1));
-    }
-
 
     @Test
     void add() {
         Book book = new Book();
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
 
         assertEquals(0, book.size()); // Check that initial size is 0
         assertTrue(book.add("A", address)); // Returns true if added successfully
         assertEquals(1, book.size()); // Now size is 1
         assertFalse(book.add("A", address)); // Returns false if already contains the same entry
 
-        Book.Address secondAddress = new Book.Address("a", 1 ,2);
+        Address secondAddress = new Address("a", 1 ,2);
         assertFalse(book.add("A", secondAddress)); // Returns false if already contains the same key
     }
 
     @Test
     void constructorFromMap() {
         Book expectedBook = new Book();
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
         expectedBook.add("A", address);
 
-        Map<String, Book.Address> testMap = new HashMap<>();
+        Map<String, Address> testMap = new HashMap<>();
         testMap.put("A", address);
         Book testBook = new Book(testMap); // 'testBook' is made from 'testMap'
 
@@ -90,7 +54,7 @@ class BookTest {
         Book book = new Book();
         assertFalse(book.delete("B")); // Returns false if it doesn't contain the specified key
 
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
         book.add("A", address);
 
         assertTrue(book.delete("A")); // Returns true if deleted successfully
@@ -101,11 +65,11 @@ class BookTest {
     @Test
     void replace() {
         Book book = new Book();
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
 
         assertFalse(book.replace("A", address)); // Returns false if it doesn't contain the specified key
 
-        Book.Address secondAddress = new Book.Address("a", 1, 2);
+        Address secondAddress = new Address("a", 1, 2);
         book.add("A", address);
 
         assertTrue(book.replace("A", secondAddress)); // Returns true if replaced successfully
@@ -116,7 +80,7 @@ class BookTest {
     @Test
     void getAddress() {
         Book book = new Book();
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
         book.add("A", address);
 
         assertEquals(address, book.getAddress("A")); // Should be equal
@@ -130,7 +94,7 @@ class BookTest {
     @Test
     void getPeopleOnlyByStreet() {
         Book book = new Book();
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
         book.add("A", address);
         book.add("B", address);
         book.add("C", address);
@@ -156,13 +120,13 @@ class BookTest {
     void getPeopleByStreetAndHouse() {
         Book book = new Book();
 
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
         book.add("A", address);
 
-        Book.Address addressWithDifferentFlat = new Book.Address("a", 1, 2);
+        Address addressWithDifferentFlat = new Address("a", 1, 2);
         book.add("B", addressWithDifferentFlat);
 
-        Book.Address addressWithDifferentHouse = new Book.Address("a", 2, 1);
+        Address addressWithDifferentHouse = new Address("a", 2, 1);
         book.add("C", addressWithDifferentHouse);
 
         Set<String> sameHouseSet = new HashSet<>();
@@ -184,7 +148,7 @@ class BookTest {
     @Test
     void size() {
         Book book = new Book();
-        Book.Address address = new Book.Address("a", 1, 1);
+        Address address = new Address("a", 1, 1);
 
         assertEquals(0, book.size()); // Initial size
 
@@ -202,8 +166,8 @@ class BookTest {
     void testEquals() {
         Book firstBook = new Book();
         Book secondBook = new Book();
-        Book.Address firstAddress = new Book.Address("a", 1, 1);
-        Book.Address secondAddress = new Book.Address("a", 1, 2);
+        Address firstAddress = new Address("a", 1, 1);
+        Address secondAddress = new Address("a", 1, 2);
 
         firstBook.add("a", firstAddress);
         secondBook.add("a", firstAddress);

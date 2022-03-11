@@ -13,10 +13,10 @@ import java.util.Set;
  * Address book interface
  */
 public interface AddressBook {
-    boolean add(String person, Book.Address ad);
+    boolean add(String person, Address ad);
     boolean delete(String person);
-    boolean replace(String person, Book.Address ad);
-    Book.Address getAddress(String person);
+    boolean replace(String person, Address ad);
+    Address getAddress(String person);
     Set<String> getPeople(String street);
     Set<String> getPeople(String street, int house);
     int size();
