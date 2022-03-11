@@ -5,19 +5,18 @@
  *          Realisation module.
  */
 
-/* Package */
+
 package coursework.sem2.t1;
 
-/* Imports */
 import java.util.*;
 
 
-/*
+/**
  * Address book implementation class
  */
 public class Book {
 
-    /*
+    /**
      * Address implementation class
      */
     public static class Address {
@@ -29,6 +28,13 @@ public class Book {
 
 
         /* Constructors */
+
+        /**
+         * Default constructor from all components
+         * @param street Street
+         * @param house House
+         * @param flat Flat
+         */
         public Address(String street, int house, int flat) {
             if (street == null || street.isEmpty() || house <= 0 || flat <= 0) {
                 throw new IllegalArgumentException(String.format("Incorrect address format with params: %s, %d, %d",
@@ -42,28 +48,25 @@ public class Book {
 
         /* Methods */
 
-        /*
+        /**
          * Get address street method
-         * Params: None
-         * Returns: (String) Address street name
+         * @return Address street name
          */
         public String getStreet() {
             return this.street;
         }
 
-        /*
+        /**
          * Get address house method
-         * Params: None
-         * Returns: (int) Address house number
+         * @return Address house number
          */
         public int getHouse() {
             return this.house;
         }
 
-        /*
+        /**
          * Get address flat method
-         * Params: None
-         * Returns: (int) Address flat number
+         * @return Address flat number
          */
         public int getFlat() {
             return this.flat;
@@ -97,15 +100,20 @@ public class Book {
     /* Fields */
     private final Map<String, Address> book; // Basic container
 
-
     /* Constructors */
 
-    /* Default constructor */
+    /**
+     * Default void constructor
+     */
     public Book() {
         this.book = new HashMap<>();
     }
 
-    /* Constructor from Map */
+    /**
+     * Constructor from map
+     * @param b Map to construct Book from
+     * @throws NullPointerException if map is null
+     */
     public Book(Map<String, Address> b) {
         if (b == null) throw new NullPointerException("Null map");
         this.book = new HashMap<>();
@@ -115,22 +123,23 @@ public class Book {
 
     /* Methods */
 
-    /* Check if book has specified person
-     * Params: (String) person - key to be checked
-     * Returns: true if this book has a specified person
+    /**
+     * Private method. Returns true if this map contains a mapping for the specified key.
+     * @param person key whose presence in this map is to be tested
+     * @return true if this map contains a mapping for the specified key
+     * @throws NullPointerException if the specified key is null
      */
     private boolean contains(String person) {
         if (person == null) throw new NullPointerException("Null person");
         return this.book.containsKey(person);
     }
 
-    /* Add person to book method
-     * Params:
-     *  - (String) person
-     *      Person (key)
-     *  - (Address) ad
-     *      Person's address (value)
-     * Returns: true if the person was added, false otherwise
+    /**
+     * Associates the specified value with the specified key in this book
+     * @param person key with which the specified value is to be associated
+     * @param ad value to be associated with the specified key
+     * @return true if added successfully, false otherwise
+     * @throws NullPointerException if the specified key is null
      */
     public boolean add(String person, Address ad) {
         if (this.contains(person))
@@ -139,9 +148,11 @@ public class Book {
         return true;
     }
 
-    /* Delete person from book method
-     * Params: (String) person - key to be deleted
-     * Returns: true if the person was deleted, false otherwise
+    /**
+     * Removes the mapping for a key from this book if it is present
+     * @param person key whose mapping is to be removed from the map
+     * @return true if deleted successfully, false otherwise
+     * @throws NullPointerException if the specified key is null
      */
     public boolean delete(String person) {
         if (!this.contains(person))
@@ -150,13 +161,12 @@ public class Book {
         return true;
     }
 
-    /* Replace person's address in the book method
-     * Params:
-     *  - (String) person
-     *      Person (key)
-     *  - (Address) ad
-     *      Person's new address (value)
-     * Returns: true if the person's address was replaced, false otherwise
+    /**
+     * Replaces the entry for the specified key only if it is currently mapped to some value.
+     * @param person key with which the specified value is associated
+     * @param ad value to be associated with the specified key
+     * @return true if replaced successfully, false otherwise
+     * @throws NullPointerException if the specified key is null
      */
     public boolean replace(String person, Address ad) {
         if (!this.contains(person))
@@ -165,18 +175,21 @@ public class Book {
         return true;
     }
 
-    /* Get address by person method
-     * Params: (String) person - key
-     * Returns: (Address) The address to which the specified key is mapped, or null if this book contains no mapping for the key
+    /**
+     * Returns the value to which the specified key is mapped, or null if this book contains no mapping for the key.
+     * @param person the key whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or null if this book contains no mapping for the key
+     * @throws NullPointerException if the specified key is null
      */
     public Address getAddress(String person) {
         if (person == null) throw new NullPointerException("Null person");
         return this.book.get(person);
     }
 
-    /* Get set of people living on the specified street
-     * Params: (String) street - the street to be examined
-     * Returns: (Set<String>) Set of people who live on the specified street
+    /**
+     * Returns set of keys whose values' streets match the specified one.
+     * @param street the street whose villagers are to be found
+     * @return set of keys whose values' streets match the specified one
      */
     public Set<String> getPeople(String street) {
         Set<String> res = new HashSet<>();
@@ -189,11 +202,11 @@ public class Book {
         return res;
     }
 
-    /* Get set of people living on the specified street AND in the specified house
-     * Params:
-     *  - (String) street - the street to be examined
-     *  - (int) house - the number of house to be examined
-     * Returns: (Set<String>) List of people who live on the specified street AND in the specified house
+    /**
+     * Returns set of keys whose values' streets and house match the specified ones.
+     * @param street the street whose villagers are to be found
+     * @param house the house whose villagers are to be found
+     * @return set of keys whose values' streets and house match the specified ones
      */
     public Set<String> getPeople(String street, int house) {
         Set<String> res = new HashSet<>();
@@ -208,9 +221,9 @@ public class Book {
         return res;
     }
 
-    /* Get book size method
-     * Params: None
-     * Returns: (int) the size of the book
+    /**
+     * Returns the number of key-value mappings in this book.
+     * @return the number of key-value mappings in this book
      */
     public int size() {
         return this.book.size();

@@ -5,10 +5,8 @@
  *          Test module.
  */
 
-/* Package */
 package coursework.sem2.t1;
 
-/* Imports */
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +16,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 
-/*
+/**
  * Address book test class
  */
 class BookTest {
